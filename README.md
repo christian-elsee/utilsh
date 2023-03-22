@@ -34,37 +34,28 @@ A list of the util scripts commited to this repo, which details usage and provid
 
 Rebases git history in order to change commiting author/email; the driver is mostly the need to change contact email.
 
-Print usage.
 ```sh
+# print usage
 $ src/git-rebase-author.sh -h
 usage:git-rebase-author.sh <sha> <author> <name>
 ```
-
-Print the latest commit log
 ```sh
-$ git log -n1
+# print latest commit log
+$ git log -n1 | grep -E '^(commit|Author)'
 commit 01422e4485bd71b27ddc5af36a533c5aec2ddcec (HEAD -> feature/git-rebase-author.sh)
 Author: christian <christian@elsee.xyz>
-Date:   Thu Mar 23 03:36:46 2023 +0100
-
-    Use Get Opts Builtin To Display Usage
 ```
-
-Update author
 ```sh
+# update author
 $ src/git-rebase-author.sh cc6b3edf7e7398aedfda87d5172c002bc42bc7fe~1 ssdd christian@elsee.xyz
 Mar 23 03:47:40  christian[17850] <Debug>: Enter :: sha=cc6b3edf7e7398aedfda87d5172c002bc42bc7fe~1 name=ssdd email=christian@elsee.xyz
 ...
 ```
-
-Print the latest commit log again
 ```sh
- $ git log -n1
+# print latest commit log again
+$ git log -n1 | grep -E '^(commit|Author)'
 commit cccae4b5fc39c97bd99dfb817f2855c9f2d4e906 (HEAD -> feature/git-rebase-author.sh)
 Author: ssdd <christian@elsee.xyz>
-Date:   Thu Mar 23 03:36:46 2023 +0100
-
-    Use Get Opts Builtin To Display Usage
 ```
 
 ## License
