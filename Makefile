@@ -16,7 +16,6 @@ distclean: ;: ## distclean
 
 clean: distclean ;: ## clean
 
-
 ## ad hoc
 push: branch := $(shell git branch --show-current)
 push:
