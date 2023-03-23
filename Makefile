@@ -10,7 +10,16 @@ export TS   := $(shell date +%s)
 @goal: dist
 
 dist: ;: ## dist
-	mkdir -p $@
+	mkdir -p $@/test/test_helper
+
+	git clone https://github.com/bats-core/bats-core.git "$@/test/bats"
+	git clone https://github.com/bats-core/bats-support.git "$@/test/test_helper/bats-support"
+	git clone https://github.com/bats-core/bats-assert.git "$@/test/test_helper/bats-assert"
+
+check:
+	cp -rf test dist
+	dist/test/bats/bin/bats --tap dist/test
+
 distclean: ;: ## distclean
 	rm -rvf dist
 clean: distclean ;: ## clean
