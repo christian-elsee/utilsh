@@ -5,21 +5,20 @@ set -eu
 . "$( dirname $0 )/common.sh"
 
 ## arg
-usage "[port=8080]" \
+usage "<port>" \
       "A minimal HTTP server" \
       "$@"
 
 ## env
-port=${1:-8080}
+: ${1?port}
 
 ## main
 logger -sp DEBUG -- "Enter" \
-  :: "port=$port"
+  :: "port=$1"
 
 socat -v -d -d \
-  "tcp-listen:$port,crlf,reuseaddr,fork" \
+  "tcp-listen:$1,crlf,reuseaddr,fork" \
   system:"
-    echo HTTP/1.1 302 OK;
-    echo Location\: \"https://msn.com\";
+    echo HTTP/1.0 200 OK;
     echo;
   "

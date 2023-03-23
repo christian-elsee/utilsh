@@ -58,6 +58,40 @@ $ git log -n1 | grep -E '^(commit|Author)'
 commit cccae4b5fc39c97bd99dfb817f2855c9f2d4e906 (HEAD -> feature/git-rebase-author.sh)
 Author: ssdd <christian@elsee.xyz>
 ```
+#### ## <a id="mws"></a>[src/mws.sh](src/mws.sh)
+
+- A socat-based minimal webserver,
+- Returns a valid HTTP/1.0 response with an empty body
+- Useful as a sanity check: an http clients' dispatch cycle and request payload
+
+```sh
+# usage
+$ src/mws.sh -h
+usage: mws.sh <port>
+
+A minimal HTTP server
+```
+```sh
+# bind to 8080
+$ src/mws.sh 8080
+Mar 23 13:46:31  christian[21054] <Debug>: Enter :: port=8080
+2023/03/23 13:46:31 socat[21055] N listening on LEN=16 AF=2 0.0.0.0:8080
+```
+```sh
+# curl from sep terminal/session/etc
+$ curl -D/dev/stderr localhost:8080
+HTTP/1.0 200 OK
+```
+```sh
+# socat logs from request
+2023/03/23 13:46:31 socat[21055] N listening on LEN=16 AF=2 0.0.0.0:8080
+...
+> 2023/03/23 13:48:16.001524  length=73 from=0 to=72
+GET / HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.64.1
+Accept: */*
+```
 
 ## License
 
