@@ -6,7 +6,7 @@ set -eu
 die() { local status=$1; shift; echo "$*" >&2; exit $status; }  # complain to STDERR and exit with error
 needs_arg() { if [ -z "$OPTARG" ]; then die "$( basename $0 ):option requires an argument -- --$OPT"; fi; }
 
-usage() { local desc=$1 args=$2 ;shift 2
+usage() { local args=$1 desc=$2 ;shift 2
   # if no argument have been passed to caller, we
   # default to -h case
   if [ "$#" -eq 0 ] ;then
