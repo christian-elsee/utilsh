@@ -1,6 +1,6 @@
 # utilsh
 
-A collection of posix compliant, ad-hoc utility scripts.
+A collection of posix compliant, executable, ad-hoc utility scripts. See [libsh](/christian-elsee/libsh) for a collection of "stdlib" type function decs/defs.
 
 - [Requirements](#requirements)
 - [Usage](#usage)
