@@ -33,7 +33,9 @@ A list of the util scripts commited to this repo, which details usage and provid
 
 #### ## <a id="git-rebase-author"></a>[src/git-rebase-author.sh](src/git-rebase-author.sh)
 
-Rebases git history in order to change commiting author/email; the driver is mostly the need to change contact email.
+- Rebases git commit log to a given sha
+- Replaces author name, contact email
+- Useful for dealing with the reality of contact information being frequently updated
 
 ```sh
 # print usage
@@ -91,6 +93,42 @@ GET / HTTP/1.1
 Host: localhost:8080
 User-Agent: curl/7.64.1
 Accept: */*
+```
+#### ## <a id="posix"></a>[src/posix.sh](src/posix.sh)
+
+- Passes an arbitrary shell command to an alpine posix shell
+- Runs in a short-lived, self-cleaning docker container
+- The container exit status is useful as a boolean for quick sanity checks of any command
+
+```sh
+# usage
+$ src/posix.sh -h
+usage: posix.sh <argv>
+
+Run argv on posix-strict shell
+```
+```sh
+# use built-in read with flag for default value in bash
+$ read -ei "default value" readvar
+default value
+$ echo $readvar
+default value
+```
+```sh
+# posix standard doesn't define "-ei" flags for built-in read
+$ src/posix.sh read -i "default value" readvar
+Mar 23 14:01:09  christian[21141] <Debug>: Enter :: read -i default value readvar
++ cat /etc/os-release
+NAME="Alpine Linux"
+ID=alpine
+VERSION_ID=3.17.2
+PRETTY_NAME="Alpine Linux v3.17"
+HOME_URL="https://alpinelinux.org/"
+BUG_REPORT_URL="https://gitlab.alpinelinux.org/alpine/aports/-/issues"
++ read -i default value readvar
+_: read: line 0: illegal option -i
+$ echo $?
+2
 ```
 
 ## License
