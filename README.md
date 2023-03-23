@@ -4,6 +4,7 @@ A collection of posix compliant, ad-hoc utility scripts.
 
 - [Requirements](#requirements)
 - [Usage](#usage)
+  - [git-rebase-author](#git-rebase-author)
 - [License](#license)
 
 ## Requirements
@@ -30,7 +31,7 @@ There is NO WARRANTY, to the extent permitted by law.
 
 A list of the util scripts commited to this repo, which details usage and provides examples
 
-#### git-rebase-author.sh
+#### ## <a id="git-rebase-author"></a>[src/git-rebase-author.sh](src/git-rebase-author.sh)
 
 Rebases git history in order to change commiting author/email; the driver is mostly the need to change contact email.
 
