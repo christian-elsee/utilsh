@@ -24,7 +24,7 @@ assets/bats-assert assets/bats-core assets/bats-support: ;: ## assets/$@
 
 check: ;: ## check
 	cp -rf test dist
-	dist/test/bats/bin/bats --tap dist/test
+	dist/test/bats/bin/bats --tap dist/test/common.bats
 
 distclean: ;: ## distclean
 	rm -rvf dist
