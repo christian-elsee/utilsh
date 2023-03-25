@@ -19,7 +19,11 @@ logger -sp DEBUG -- "Enter" \
      "name=$2"  \
      "email=$3"
 
+if [ "$1" = "root" ]; then
+  set -- "--root" "$2" "$3"
+fi
+
 set -x
-git rebase \
+git rebase --autosquash \
   -i "$1" \
   -x "git commit --no-edit --amend --author '$2 <$3>'"

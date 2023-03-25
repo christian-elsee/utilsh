@@ -22,9 +22,12 @@ assets/bats-assert assets/bats-core assets/bats-support: ;: ## assets/$@
 		| xargs -I% -- \
 			git clone https://github.com/bats-core/%.git assets/%
 
+check: export PATH := $(PWD)/src:$(PATH)
+check: export TMPDIR := /tmp/check
 check: ;: ## check
 	cp -rf test dist
-	dist/test/bats/bin/bats --tap dist/test/common.bats
+	dist/test/bats/bin/bats dist/test/*.bats \
+		--tap
 
 distclean: ;: ## distclean
 	rm -rvf dist
