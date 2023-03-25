@@ -5,6 +5,7 @@ A collection of posix compliant, executable, ad-hoc utility scripts. See [libsh]
 - [Requirements](#requirements)
 - [Usage](#usage)
   - [git-rebase-author](#git-rebase-author)
+- [Testing](#testing)
 - [License](#license)
 
 ## Requirements
@@ -130,6 +131,28 @@ _: read: line 0: illegal option -i
 $ echo $?
 2
 ```
+
+## Testing
+
+A set of regressions tests built on top of [bats](https://github.com/bats-core/bats-core) that output [tap](https://testanything.org/) compliant reports.
+
+Tests should be executed as part of the make workflow, but can be executed independently as well.
+
+```sh
+$ make check
+...
+1..8
+ok 1 can print usage
+ok 2 can pass a help flag
+ok 3 fails to use an arbitrary flag
+ok 4 can rebase a commit log's author
+ok 5 can send an http request
+ok 6 can receive an http response
+ok 7 can run a posix compliant command
+ok 8 fails to run a non posix-compliant command
+```
+
+Tests cases are commited, as ~~bats~~ files, to the [test](test) directory.
 
 ## License
 
