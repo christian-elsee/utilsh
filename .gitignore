@@ -6,7 +6,11 @@
 
 ## subject
 !src
-!src/**
+!src/*
+
+## test
+!test
+!test/*
 
 ## secrets
 !secrets
