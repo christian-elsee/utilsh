@@ -187,7 +187,7 @@ Tests cases are commited, as ~~bats~~ files, to the [test](test) directory.
 
 A minimal overview of the development workflow.
 
-1\. Add an executable script to `src` and commit
+1\. Add an executable script to `src` and commit.
 ```sh
 $ cat <<eof | tee src/foobar.sh
 #!/bin/sh
@@ -227,9 +227,41 @@ $ git commit -m "Add Development Worfklow Example Test"
  create mode 100644 test/foobar.bats
 ```
 
-3\. Run make workflow
+3\. Evaluate test cases by running `make` workflow.
 ```sh
+$ make | grep foo
+ok 4 can foobar
+ok 5 can not barfoo
+```
 
+4\. Push changes to repository on successful make workflow
+```sh
+$ make push
+test "feature-github-actions"
+# ensure working tree is clean for push
+git status --porcelain \
+  | xargs \
+  | grep -qv .
+ssh-agent bash -c \
+  "<secrets/key.gpg gpg -d | ssh-add - \
+    && git push origin feature-github-actions -f    \
+  "
+gpg: encrypted with rsa2048 key, ID BD4B2D8362388282, created 2019-05-30
+      "local <local@me>"
+Identity added: (stdin) (ssdd)
+...
+ * [new branch]      feature-github-actions -> feature-github-actions
+```
+
+5\. Check github actions build status.
+```sh
+$ ( gh workflow view main.yaml ) </dev/null
+main - main.yaml
+ID: 52494213
+
+Total runs 3
+Recent runs
+✓  Update README                  main  feature-github-actions  push  4534871010
 ```
 
 ## License
