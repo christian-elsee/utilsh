@@ -6,6 +6,7 @@ A collection of posix compliant, executable, ad-hoc utility scripts. See [libsh]
 - [Usage](#usage)
   - [git-rebase-author](#git-rebase-author)
 - [Testing](#testing)
+- [Development](#development)
 - [License](#license)
 
 ## Requirements
@@ -28,6 +29,34 @@ This is free software; you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 ```
 
+- shellcheck, 0.9.0
+```sh
+$ shellcheck -V
+ShellCheck - shell script analysis tool
+version: 0.9.0
+license: GNU General Public License, version 3
+website: https://www.shellcheck.net
+```
+
+- socat, 1.7.4.3
+```sh
+$ socat -V
+socat by Gerhard Rieger and contributors - see www.dest-unreach.org
+socat version 1.7.4.3 on
+   running on Darwin version Darwin Kernel Version 20.3.0: Thu Jan 21 00:07:06 PST 2021; root:xnu-7195.81.3~1/RELEASE_X86_64, release 20.3.0, machine x86_64
+```
+
+- docker, 20.10.12
+```sh
+$ docker version | grep -A2 -E -- 'Client|Server'
+Client:
+ Version:           20.10.12
+ API version:       1.41
+--
+Server:
+ Engine:
+  Version:          20.10.12
+```
 ## Usage
 
 A list of the util scripts commited to this repo, which details usage and provides examples
@@ -153,6 +182,87 @@ ok 8 fails to run a non posix-compliant command
 ```
 
 Tests cases are commited, as ~~bats~~ files, to the [test](test) directory.
+
+## Development
+
+A minimal overview of the development workflow.
+
+1\. Add an executable script to `src` and commit.
+```sh
+$ cat <<eof | tee src/foobar.sh
+#!/bin/sh
+set -eu
+
+echo foobar
+eof
+$ chmod +x src/foobar.sh
+````
+```sh
+$ git add src/foobar.sh
+$ git commit -m "Add Development Workflow Example Script"
+[feature-github-actions db309ff] Add Development Workflow Example Script
+ Date: Mon Mar 27 19:00:31 2023 +0200
+ 1 file changed, 4 insertions(+)
+ create mode 100644 src/foobar.sh
+ ```
+
+2\. Add a [bats](https://github.com/bats-core/bats-core) test case to `test` and commit.
+```sh
+$ cat <<eof | tee test/foobar.bats
+> #!/usr/bin/env bats
+
+@test "can foobar" {
+  foobar.sh | grep foobar
+}
+
+@test "can not barfoo" {
+  ! ( foobar.sh | grep barfoo )
+}
+eof
+```
+```sh
+$ git commit -m "Add Development Worfklow Example Test"
+[feature-github-actions 72c862f] Add Development Worfklow Example Test
+ 1 files changed, 9 insertions(+), 0 deletions(-)
+ create mode 100644 test/foobar.bats
+```
+
+3\. Evaluate test cases by running `make` workflow.
+```sh
+$ make | grep foo
+ok 4 can foobar
+ok 5 can not barfoo
+```
+
+4\. Push changes to repository on successful make workflow
+```sh
+$ make push
+test "feature-github-actions"
+# ensure working tree is clean for push
+git status --porcelain \
+  | xargs \
+  | grep -qv .
+ssh-agent bash -c \
+  "<secrets/key.gpg gpg -d | ssh-add - \
+    && git push origin feature-github-actions -f    \
+  "
+gpg: encrypted with rsa2048 key, ID BD4B2D8362388282, created 2019-05-30
+      "local <local@me>"
+Identity added: (stdin) (ssdd)
+...
+ * [new branch]      feature-github-actions -> feature-github-actions
+```
+
+5\. Check github actions build status.
+```sh
+$ ( gh workflow view main.yaml ) </dev/null
+main - main.yaml
+ID: 52494213
+
+Total runs 3
+Recent runs
+✓  Update README                  main  feature-github-actions  push  4534871010
+```
 
 ## License
 

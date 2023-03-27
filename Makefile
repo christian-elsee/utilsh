@@ -7,9 +7,9 @@ export TS   := $(shell date +%s)
 .POSIX:
 
 ## workflow
-@goal: dist build check
+@goal: distclean dist build check
 
-dist: assets/bats-assert assets/bats-core assets/bats-support ;: ## dist
+dist: ;: ## dist
 	mkdir -p $@
 
 build: dist
@@ -44,5 +44,5 @@ push:
 
 	ssh-agent bash -c \
 		"<secrets/key.gpg gpg -d | ssh-add - \
-			&& git push --force origin $(branch)    \
+			&& git push origin $(branch) -f    \
 		"
