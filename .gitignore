@@ -4,6 +4,10 @@
 !README.md
 !Makefile
 
+## gh actions
+!.github
+!.github/**
+
 ## subject
 !src
 !src/*
