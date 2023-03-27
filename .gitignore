@@ -3,6 +3,8 @@
 !.gitignore
 !README.md
 !Makefile
+!Dockerfile
+!.dockerignore
 
 ## gh actions
 !.github
