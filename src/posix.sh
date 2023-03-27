@@ -18,9 +18,6 @@ argv=$@
 logger -sp DEBUG -- "Enter" \
   :: "$*"
 
-docker run \
-	-it \
-	--rm \
-	--env-file "$ENV" \
-	-- "alpine:$TAG" sh -xc \
-	'cat /etc/os-release; $@' _ "$@"
+# disable stderr if we don't want shellcheck spamming terminal
+echo "$*" \
+  | shellcheck --shell=dash /dev/stdin 1>&2

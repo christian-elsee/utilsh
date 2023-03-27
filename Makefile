@@ -7,13 +7,30 @@ export TS   := $(shell date +%s)
 .POSIX:
 
 ## workflow
-@goal: dist
+@goal: dist build check
 
-dist: ;: ## dist
+dist: assets/bats-assert assets/bats-core assets/bats-support ;: ## dist
 	mkdir -p $@
+
+build: dist
+	docker build \
+		-t local/$(NAME):latest \
+		.
+
+check: build ;: ## check
+	# requires dind to test script thats
+	docker create \
+		--name check.$(NAME) \
+		--rm \
+		local/$(NAME):latest
+	docker cp test check.$(NAME):/opt/main
+	docker cp src check.$(NAME):/opt/main
+	docker start -ai check.$(NAME)
+
 distclean: ;: ## distclean
 	rm -rvf dist
 clean: distclean ;: ## clean
+	rm -rvf assets
 
 ## ad hoc
 push: branch := $(shell git branch --show-current)
@@ -27,5 +44,5 @@ push:
 
 	ssh-agent bash -c \
 		"<secrets/key.gpg gpg -d | ssh-add - \
-			&& git push origin $(branch) -f    \
+			&& git push --force origin $(branch)    \
 		"
