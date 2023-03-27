@@ -1,6 +1,6 @@
 # utilsh
 
-A collection of posix compliant, ad-hoc utility scripts.
+A collection of posix compliant, executable, ad-hoc utility scripts. See [libsh](/christian-elsee/libsh) for a collection of "stdlib" type function decs/defs.
 
 - [Requirements](#requirements)
 - [Usage](#usage)
@@ -33,7 +33,9 @@ A list of the util scripts commited to this repo, which details usage and provid
 
 #### ## <a id="git-rebase-author"></a>[src/git-rebase-author.sh](src/git-rebase-author.sh)
 
-Rebases git history in order to change commiting author/email; the driver is mostly the need to change contact email.
+- Rebases git commit log to a given sha
+- Replaces author name, contact email
+- Useful for dealing with the reality of contact information being frequently updated
 
 ```sh
 # print usage
@@ -57,6 +59,76 @@ Mar 23 03:47:40  christian[17850] <Debug>: Enter :: sha=cc6b3edf7e7398aedfda87d5
 $ git log -n1 | grep -E '^(commit|Author)'
 commit cccae4b5fc39c97bd99dfb817f2855c9f2d4e906 (HEAD -> feature/git-rebase-author.sh)
 Author: ssdd <christian@elsee.xyz>
+```
+#### ## <a id="mws"></a>[src/mws.sh](src/mws.sh)
+
+- A socat-based minimal webserver,
+- Returns a valid HTTP/1.0 response with an empty body
+- Useful as a sanity check: an http clients' dispatch cycle and request payload
+
+```sh
+# usage
+$ src/mws.sh -h
+usage: mws.sh <port>
+
+A minimal HTTP server
+```
+```sh
+# bind to 8080
+$ src/mws.sh 8080
+Mar 23 13:46:31  christian[21054] <Debug>: Enter :: port=8080
+2023/03/23 13:46:31 socat[21055] N listening on LEN=16 AF=2 0.0.0.0:8080
+```
+```sh
+# curl from sep terminal/session/etc
+$ curl -D/dev/stderr localhost:8080
+HTTP/1.0 200 OK
+```
+```sh
+# socat logs from request
+2023/03/23 13:46:31 socat[21055] N listening on LEN=16 AF=2 0.0.0.0:8080
+...
+> 2023/03/23 13:48:16.001524  length=73 from=0 to=72
+GET / HTTP/1.1
+Host: localhost:8080
+User-Agent: curl/7.64.1
+Accept: */*
+```
+#### ## <a id="posix"></a>[src/posix.sh](src/posix.sh)
+
+- Passes an arbitrary shell command to an alpine posix shell
+- Runs in a short-lived, self-cleaning docker container
+- The container exit status is useful as a boolean for quick sanity checks of any command
+
+```sh
+# usage
+$ src/posix.sh -h
+usage: posix.sh <argv>
+
+Run argv on posix-strict shell
+```
+```sh
+# use built-in read with flag for default value in bash
+$ read -ei "default value" readvar
+default value
+$ echo $readvar
+default value
+```
+```sh
+# posix standard doesn't define "-ei" flags for built-in read
+$ src/posix.sh read -i "default value" readvar
+Mar 23 14:01:09  christian[21141] <Debug>: Enter :: read -i default value readvar
++ cat /etc/os-release
+NAME="Alpine Linux"
+ID=alpine
+VERSION_ID=3.17.2
+PRETTY_NAME="Alpine Linux v3.17"
+HOME_URL="https://alpinelinux.org/"
+BUG_REPORT_URL="https://gitlab.alpinelinux.org/alpine/aports/-/issues"
++ read -i default value readvar
+_: read: line 0: illegal option -i
+$ echo $?
+2
 ```
 
 ## License

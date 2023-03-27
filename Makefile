@@ -10,10 +10,9 @@ export TS   := $(shell date +%s)
 @goal: dist
 
 dist: ;: ## dist
-
+	mkdir -p $@
 distclean: ;: ## distclean
 	rm -rvf dist
-
 clean: distclean ;: ## clean
 
 ## ad hoc
