@@ -7,27 +7,25 @@ export TS   := $(shell date +%s)
 .POSIX:
 
 ## workflow
-@goal: dist
+@goal: dist build check
 
 dist: assets/bats-assert assets/bats-core assets/bats-support ;: ## dist
-	mkdir -p $@/test/test_helper
+	mkdir -p $@
 
-	cp -rf assets/bats-core "$@/test/bats"
-	cp -rf assets/bats-support "$@/test/test_helper/bats-support"
-	cp -rf assets/bats-assert "$@/test/test_helper/bats-assert"
+build: dist
+	docker build \
+		-t local/$(NAME):latest \
+		.
 
-assets/bats-assert assets/bats-core assets/bats-support: ;: ## assets/$@
-	dirname $@ | xargs -- mkdir -p
-	basename $@ \
-		| xargs -I% -- \
-			git clone https://github.com/bats-core/%.git assets/%
-
-check: export PATH := $(PWD)/src:$(PATH)
-check: export TMPDIR := /tmp/check
-check: ;: ## check
-	cp -rf test dist
-	dist/test/bats/bin/bats dist/test/*.bats \
-		--tap
+check: build ;: ## check
+	# requires dind to test script thats
+	docker create \
+		--name check.$(NAME) \
+		--rm \
+		local/$(NAME):latest
+	docker cp test check.$(NAME):/opt/main
+	docker cp src check.$(NAME):/opt/main
+	docker start -ai check.$(NAME)
 
 distclean: ;: ## distclean
 	rm -rvf dist
@@ -46,5 +44,5 @@ push:
 
 	ssh-agent bash -c \
 		"<secrets/key.gpg gpg -d | ssh-add - \
-			&& git push origin $(branch) -f    \
+			&& git push --force origin $(branch)    \
 		"

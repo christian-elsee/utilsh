@@ -10,7 +10,6 @@
 
 @test "can receive an http response" {
   logger -sp DEBUG -- "Test" \
-    :: "pid=$pid" \
     :: "can receive an http response"
 
   curl --fail localhost:8080
@@ -24,5 +23,5 @@ setup_file() {
 
 teardown_file() {
   logger -sp DEBUG -- "Teardown"
-  kill %1
+  pkill -9 -f socat
 }

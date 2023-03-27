@@ -15,6 +15,10 @@ setup_file() {
   logger -sp DEBUG -- "Setup"
   export repo=$( mktemp -ud )
 
+  git config --global user.name  "me"
+  git config --global user.email "me@example.com"
+  git config --global init.defaultBranch master
+
   git init $repo
   cd $repo
   touch foo bar

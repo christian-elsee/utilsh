@@ -21,9 +21,13 @@ logger -sp DEBUG -- "Enter" \
 
 if [ "$1" = "root" ]; then
   set -- "--root" "$2" "$3"
+else
+  set -- "-i $1" "$2" "$3"
 fi
+logger -sp DEBUG -- "Reset positional arguments" \
+  :: "$*"
 
 set -x
 git rebase --autosquash \
-  -i "$1" \
+  "$1" \
   -x "git commit --no-edit --amend --author '$2 <$3>'"
