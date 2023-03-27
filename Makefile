@@ -44,5 +44,5 @@ push:
 
 	ssh-agent bash -c \
 		"<secrets/key.gpg gpg -d | ssh-add - \
-			&& git push --force origin $(branch)    \
+			&& git push origin $(branch) -f    \
 		"

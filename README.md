@@ -6,6 +6,7 @@ A collection of posix compliant, executable, ad-hoc utility scripts. See [libsh]
 - [Usage](#usage)
   - [git-rebase-author](#git-rebase-author)
 - [Testing](#testing)
+- [Development](#development)
 - [License](#license)
 
 ## Requirements
@@ -28,6 +29,34 @@ This is free software; you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 ```
 
+- shellcheck, 0.9.0
+```sh
+$ shellcheck -V
+ShellCheck - shell script analysis tool
+version: 0.9.0
+license: GNU General Public License, version 3
+website: https://www.shellcheck.net
+```
+
+- socat, 1.7.4.3
+```sh
+$ socat -V
+socat by Gerhard Rieger and contributors - see www.dest-unreach.org
+socat version 1.7.4.3 on
+   running on Darwin version Darwin Kernel Version 20.3.0: Thu Jan 21 00:07:06 PST 2021; root:xnu-7195.81.3~1/RELEASE_X86_64, release 20.3.0, machine x86_64
+```
+
+- docker, 20.10.12
+```sh
+$ docker version | grep -A2 -E -- 'Client|Server'
+Client:
+ Version:           20.10.12
+ API version:       1.41
+--
+Server:
+ Engine:
+  Version:          20.10.12
+```
 ## Usage
 
 A list of the util scripts commited to this repo, which details usage and provides examples
@@ -153,6 +182,20 @@ ok 8 fails to run a non posix-compliant command
 ```
 
 Tests cases are commited, as ~~bats~~ files, to the [test](test) directory.
+
+## Development
+
+A minimal overview of the development workflow.
+
+1\. Add an executable script to `src` and commit
+```sh
+$ cat <<eof | tee src/foobar.sh
+#!/bin/sh
+set -eu
+
+echo foobar
+````
+
 
 ## License
 
