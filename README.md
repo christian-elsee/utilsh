@@ -167,7 +167,7 @@ $ echo $?
 
 A set of acceptance tests built on top of [bats](https://github.com/bats-core/bats-core) that output [tap](https://testanything.org/) compliant reports.
 
-Tests should be executed as part of the make workflow, but can be executed independently as well.
+Tests are executed as part of the make workflow, but can be executed independently as well.
 
 ```sh
 $ make check

@@ -17,7 +17,7 @@ build: dist
 		-t local/$(NAME):latest \
 		.
 
-check: build ;: ## check
+check: ;: ## check
 	# requires dind to test script thats
 	docker create \
 		--name check.$(NAME) \
