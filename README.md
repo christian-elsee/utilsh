@@ -5,6 +5,8 @@ A collection of posix compliant, executable, ad-hoc utility scripts. See [libsh]
 - [Requirements](#requirements)
 - [Usage](#usage)
   - [git-rebase-author](#git-rebase-author)
+  - [mws](#mws)
+  - [posix](#posix)
 - [Testing](#testing)
 - [Development](#development)
 - [License](#license)
@@ -163,7 +165,7 @@ $ echo $?
 
 ## Testing
 
-A set of regressions tests built on top of [bats](https://github.com/bats-core/bats-core) that output [tap](https://testanything.org/) compliant reports.
+A set of acceptance tests built on top of [bats](https://github.com/bats-core/bats-core) that output [tap](https://testanything.org/) compliant reports.
 
 Tests should be executed as part of the make workflow, but can be executed independently as well.
 
