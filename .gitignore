@@ -12,7 +12,7 @@
 
 ## subject
 !src
-!src/*
+!src/*.sh
 
 ## test
 !test
