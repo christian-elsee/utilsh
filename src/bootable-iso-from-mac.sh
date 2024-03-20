@@ -7,9 +7,11 @@ cleanup() { local status=$1 iso=$2 disk=$3
   logger -sp DEBUG -- "Cleanup" \
     :: "status=$status" \
        "iso=$iso" \
-       "disk=$3"
+       "disk=$disk"
+
+  rm -rf "$iso.dmg"
 }
-trap 'cleanup "$?" "$1" "$2"' INT TERM
+trap 'cleanup "$?" $@' INT TERM
 
 
 ## env
@@ -19,10 +21,11 @@ trap 'cleanup "$?" "$1" "$2"' INT TERM
 ## main
 logger -sp DEBUG -- "Enter" "iso=$1" "disk=$2"
 
-hdiutil convert \
-  -format UDRW \
-  -o "$1.dmg" \
-  -- "$1"
-
 diskutil unmountDisk "$2"
-dd if="$1.dmg" of="$2" bs=1m
+
+rm -rf "$1.dmg"
+hdiutil convert "$1" \
+  -format UDRW \
+  -o "$1.dmg"
+
+dd if="$1.dmg" of="$2" bs=1M
