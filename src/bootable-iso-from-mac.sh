@@ -28,4 +28,4 @@ hdiutil convert "$1" \
   -format UDRW \
   -o "$1.dmg"
 
-dd if="$1.dmg" of="$2" bs=1M
+dd if="$1.dmg" of="$2" bs=1M status=progress
