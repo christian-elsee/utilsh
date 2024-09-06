@@ -15,7 +15,7 @@ cleanup() { local status=$? app=$1 garbage=${2:-}
   # kill all app instances with the exception of current pid
   pgrep -f "$app" \
     | grep -v "$$" \
-    | xargs kill \
+    | xargs kill 2>&3 \
   ||: 
   logger -sp DEBUG -- "Killed chrome" \
     :: "status=$status" \

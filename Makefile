@@ -27,22 +27,14 @@ check: ;: ## check
 	docker cp src check.$(NAME):/opt/main
 	docker start -ai check.$(NAME)
 
+install: 
+	: ## $@
+	rm -rf $(HOME)/bin/utilsh
+	mkdir $(HOME)/bin/utilsh
+	ln -sf $(PWD)/src $(HOME)/bin/utilsh/
+
 distclean: ;: ## distclean
 	rm -rvf dist
 clean: distclean ;: ## clean
 	rm -rvf assets
 
-## ad hoc
-push: branch := $(shell git branch --show-current)
-push:
-	test "$(branch)"
-
-	# ensure working tree is clean for push
-	git status --porcelain \
-		| xargs \
-		| grep -qv .
-
-	ssh-agent bash -c \
-		"<secrets/key.gpg gpg -d | ssh-add - \
-			&& git push origin $(branch) -f    \
-		"
