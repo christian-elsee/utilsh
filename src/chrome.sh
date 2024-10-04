@@ -32,19 +32,23 @@ cleanup() { local status=$? app=$1 garbage=${2:-}
        "app=$app" \
        "gargage=$*"    
 }
-trap 'cleanup "${1:-^$}" "$GARBAGE"' EXIT INT TERM
 
 ## env
 export GARBAGE=${GARBAGE:-"$HOME/Library/Google:$HOME/Library/Application Support/Google:"}
 
-: ${1?path/to/chrome.app}
+pathdotapp=${1:-/Applications/Google\ Chrome.app/}
 
 ## main
 logger -sp DEBUG -- "Enter" \
-  :: "path=$1" \
+  :: "path=$pathdotapp" \
      "remove=$GARBAGE"
 
-open -W "$1"
+trap "cleanup '$pathdotapp' '$GARBAGE'" EXIT INT TERM
+logger -sp DEBUG -- "Registered kernel trap" \
+  :: "path=$pathdotapp" \
+     "remove=$GARBAGE"
+
+open -W "$pathdotapp" & wait
 logger -sp DEBUG -- "Chrome process exited" \
-  :: "path=$1" \
+  :: "path=$pathdotapp" \
      "remove=$GARBAGE"
