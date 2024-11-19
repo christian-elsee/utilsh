@@ -29,9 +29,8 @@ check: ;: ## check
 
 install: 
 	: ## $@
-	rm -rf $(HOME)/bin/utilsh
-	mkdir $(HOME)/bin/utilsh
-	ln -sf $(PWD)/src $(HOME)/bin/utilsh/
+	mkdir -p $(HOME)/bin/utilsh
+	rsync -av --delete ./src/ $(HOME)/bin/utilsh
 
 distclean: ;: ## distclean
 	rm -rvf dist
