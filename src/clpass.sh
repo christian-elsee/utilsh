@@ -12,6 +12,8 @@ cleanup() { local status=$?
 
   pbcopy </dev/null
   logger -sp INFO -- "Clipboard cleared"
+
+  exit $status
 }
 
 ## env
