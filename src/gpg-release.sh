@@ -10,7 +10,7 @@ logger() { command logger $@ 2>&3 ;}
 ## env
 export OPENSSLARGS="enc -d -aes-256-cbc"
 
-path=${1?path/to/enc/pass} ;shift
+path=${1?req! path/to/enc/pass} ;shift
 gpgargs=${@:---default-recipient-self}
 
 ## main
