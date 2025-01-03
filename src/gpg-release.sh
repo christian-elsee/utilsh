@@ -11,19 +11,20 @@ logger() { command logger $@ 2>&3 ;}
 export OPENSSLARGS="enc -d -aes-256-cbc"
 
 path=${1?req! path/to/enc/pass} ;shift
-gpgargs=${@:---default-recipient-self}
+recipient=${1:-}
+gpgargs="-r $recipient"
 
 ## main
 logger -sp DEBUG -- "Enter" \
   :: "openssl-arguments=$OPENSSLARGS" \
      "path=$path" \
-     "gpgargs=$gpgargs"
+     "recipient=$recipient"
 
-if [ $# -eq 1 ] ;then
-	logger -sp DEBUG -- "Prepend recipient flag to key id" \
+if [ -z "$recipient" ] ;then
+	logger -sp DEBUG -- "Set recipient is default self" \
 		:: "path=$path" \
-     	 "keyid=$1"
-  gpgargs="-r $1"
+       "recipient=$recipient"
+  gpgargs="--default-recipient-self"
 fi
 
 { <"$path" base64 -d &>/dev/null \
@@ -32,7 +33,7 @@ fi
 
 } | openssl $OPENSSLARGS 2>&3 \
   | { : \
-  		| gpg -ae "$gpgargs" \
+  		| gpg -ae $gpgargs \
   		| gpg -d --passphrase-fd 100
 
   	} 100<&0
