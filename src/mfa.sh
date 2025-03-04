@@ -14,6 +14,8 @@ set -euo pipefail
 logger -sp DEBUG -- "Enter" \
 	:: "seed=$( echo "$1" | cut -c 1-5 )"
 
-echo "$1" \
+printf "$1" \
 	| totp-cli instant \
-	| tee /dev/fd/10
+	| tr -d \\n \
+	| tee /dev/fd/10 \
+	| xargs
