@@ -6,12 +6,18 @@ set -euo pipefail
 
 ## fnc
 logger() { command logger $@ 2>&3 ;}
+release() { local argv=${@?}
+  : \
+  | gpg -ae $@ \
+  | gpg -d --passphrase-fd 100
+
+} 100<&0
 
 ## env
 export OPENSSLARGS="enc -d -aes-256-cbc"
 
-path=${1?req! path/to/enc/pass} ;shift
-recipient=${1:-}
+path=${1?req! path/to/enc/pass}
+recipient=${2:-}
 gpgargs="-r $recipient"
 
 ## main
@@ -27,13 +33,28 @@ if [ -z "$recipient" ] ;then
   gpgargs="--default-recipient-self"
 fi
 
-{ <"$path" base64 -d &>/dev/null \
-  && <"$path" base64 -d \
-  || <"$path" cat
+if : | release $gpgargs ;then
+  logger -sp DEBUG -- "Determined private key" \
+    :: "path=$path" \
+       "gpgargs=$gpgargs" \
+       "released=true"
 
-} | openssl $OPENSSLARGS 2>&3 \
-  | { : \
-  		| gpg -ae $gpgargs \
-  		| gpg -d --passphrase-fd 100
+else
+  # check if path is base64 encoded - if the
+  # case decode, otherwise write to stdout
+  logger -sp DEBUG -- "Determined private key" \
+    :: "path=$path" \
+       "gpgargs=$gpgargs" \
+       "released=false"
 
-  	} 100<&0
+  { <"$path" base64 -d &>/dev/null \
+      && <"$path" base64 -d \
+      || <"$path" cat
+
+  } | openssl $OPENSSLARGS \
+    | release $gpgargs
+
+fi &>/dev/fd/3
+logger -sp INFO -- "Private key released" \
+    :: "path=$path" \
+       "gpgargs=$gpgargs"
