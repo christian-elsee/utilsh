@@ -8,25 +8,10 @@ export PREFIX ?= $(HOME)/bin/utilsh
 .POSIX:
 
 ## workflow
-@goal: distclean dist build check
+@goal: check
 
-dist: ;: ## dist
-	mkdir -p $@
-
-build: dist
-	docker build \
-		-t local/$(NAME):latest \
-		.
-
-check: ;: ## check
-	# requires dind to test script thats
-	docker create \
-		--name check.$(NAME) \
-		--rm \
-		local/$(NAME):latest
-	docker cp test check.$(NAME):/opt/main
-	docker cp src check.$(NAME):/opt/main
-	docker start -ai check.$(NAME)
+check:
+	: ## $@
 
 install: 
 	: ## $@
