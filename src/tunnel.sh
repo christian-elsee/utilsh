@@ -20,3 +20,5 @@ logger -sp DEBUG -- "Enter" \
     	 "port=$2"
 
 ssh -N -L "127.0.0.1:$2:$IFACE:$2" "$1" &
+echo $!
+
