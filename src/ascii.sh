@@ -1,6 +1,6 @@
 #!/bin/bash
 set -eu
-set -o pipefaul ||:
+set -o pipefail ||:
 
 ## main
 logger -sp DEBUG -- "Enter"
