@@ -15,9 +15,10 @@ release() { local argv=${@?}
 
 ## env
 export OPENSSLARGS="enc -d -aes-256-cbc"
+export DEFAULT_RECIPIENT=christian@accelerate
 
 path=${1?req! path/to/enc/pass}
-recipient=${2:-}
+recipient=${2:-$DEFAULT_RECIPIENT}
 gpgargs="-r $recipient"
 
 ## main
@@ -25,13 +26,6 @@ logger -sp DEBUG -- "Enter" \
   :: "openssl-arguments=$OPENSSLARGS" \
      "path=$path" \
      "recipient=$recipient"
-
-if [ -z "$recipient" ] ;then
-	logger -sp DEBUG -- "Set recipient is default self" \
-		:: "path=$path" \
-       "recipient=$recipient"
-  gpgargs="--default-recipient-self"
-fi
 
 if : | release $gpgargs ;then
   logger -sp DEBUG -- "Determined private key" \
